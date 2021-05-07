@@ -1,0 +1,18 @@
+To Install PHP Mailer
+
+1. Open Comand Prompt in windows
+2. select Any dirctory to download in CMD eg:- C:\PHPMailer\
+3. Then Type This Command 'composer require phpmailer/phpmailer' and run it.
+4. Then Finaly you see the output in 'C:\PHPMailer\' this directory
+
+
+
+Open Google Account 
+1.Disable Two factor password verification in google account.
+2.Turn on Less Security
+3.Allow third party app
+
+
+For Learning
+
+https://alexwebdevelop.com/phpmailer-tutorial/
