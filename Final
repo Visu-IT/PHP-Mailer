@@ -1,0 +1,75 @@
+//How to send a forgot password through email using php (PHPMailer)
+
+Step 1: Download PHPMailer Package from GitHub
+
+You can just download the PHPMailer source files and include the required files manually.
+
+You can download the ZIP file with the source code from the PHPMailer homepage[1], 
+clicking on the “Clone or download” green button (on the right) and then selecting “Download ZIP”. 
+Unzip the package inside the directory where you want to save the source files.
+
+[1] https://github.com/PHPMailer/PHPMailer
+
+Step 2: Open (From Gmail Address) Google Account and do the following steps:
+
+1.Disable Two factor password verification in google account.
+2.Turn on Less Security
+3.Allow third party app
+
+Step 3: Try use below Code (Note: Here, I mentioned only the functionality of PHP and MySQL)
+
+<?php 
+session_start();
+
+use PHPMailer\PHPMailer\PHPMailer;  //add use in starting of the code
+
+$db = mysqli_connect('localhost', 'root', '', '[Enter your Database Name]'); // connect to database
+
+if (isset($_POST['forgot_btn'])) {
+	forgotpassword();
+}
+
+function forgotpassword(){
+global $db;
+ 
+    $user_id = $_POST['user_id'];
+    $result = mysqli_query($db,"SELECT * FROM users where user_id='$user_id'");
+    $row = mysqli_fetch_assoc($result);
+	$fetch_user_id=$row['user_id'];
+	$name=$row['name'];
+	$email_id=$row['email_id'];
+	$password=$row['password'];
+	if($user_id==$fetch_user_id) {
+   require '../PHPMailer/vendor/autoload.php';  //Please correctly mention the PHPMailer installed directory (Don't follow my directory)
+
+$mail = new PHPMailer(TRUE);
+try{
+   $mail->setFrom('[Enter your From Email_Address]', '[Enter Sender Name]');
+   $mail->addAddress($email_id, $name);  //[To Email Address and Name]
+   $mail->Subject = 'Regarding Forgot Password';
+   $mail->Body = 'Hi '.$name.',Your Login Password is:'.$password.'';
+   $mail->isSMTP();
+   $mail->Host = 'smtp.gmail.com';
+   $mail->SMTPAuth = TRUE;
+   $mail->SMTPSecure = 'tls';
+   $mail->Username = '[Enter your From Email_Address]';
+   $mail->Password = '[Enter your From Email_Address -> Password]';
+   $mail->Port = 587;
+   
+   if($mail->send())
+   {
+	  echo "<script>alert('Password Sent Successfully');</script>"; 
+   }
+   else
+   {
+	 echo "<script>alert('Please Check Your Internet Connection or From Email Address/Password or Wrong To Email Address');</script>";   
+   }
+}
+catch (Exception $e)
+{
+   echo "<script>alert('Please Check Your Internet Connection or From Email Address/Password or Wrong To Email Address');</script>";
+}
+	}
+}
+
+?>
